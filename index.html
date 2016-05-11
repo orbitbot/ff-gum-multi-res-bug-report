@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Firefox multi-resolution getUserMedia bug</title>
+
+  <style>
+    body, html {
+      height: 100%;
+    }
+
+    button {
+      margin: 0 10px 20px 0;
+      width: 90px;
+    }
+
+    video {
+      background: none;
+      height: auto;
+      width: auto;
+    }
+  </style>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+
+</head>
+
+<body>
+
+<video id="video1" autoplay style="border: 1px dotted black"></video>
+<video id="video2" autoplay style="border: 1px dotted black"></video>
+<input type="button" id="startButton" value="start Multiple GUM" />
+
+<script>
+var video1 = document.getElementById('video1');
+var video2 = document.getElementById('video2');
+var start = document.getElementById('startButton');
+
+start.addEventListener('click', function() {
+  navigator.getUserMedia({
+    video : {
+      width  : { exact: 1280 },
+      height : { exact: 720 }
+    }
+  }, function success(stream) {
+    window.stream2 = stream;
+    video2.srcObject = stream;
+  }, console.error.bind(console, 'second'));
+
+  navigator.getUserMedia({
+    video: {
+      width  : { exact: 640 },
+      height : { exact: 480 }
+    }
+  }, function success(stream) {
+    window.stream1 = stream;
+    video1.srcObject = stream;
+  }, console.error.bind(console, 'first'));
+});
+</script>
+
+</body>
+</html>
